@@ -1,0 +1,202 @@
+import java.sql.*;
+
+public class TransportSystem {
+    public static void main(String[] args) {
+        BusTransportEnquiry bus = new BusTransportEnquiry();
+        RailwayTransportEnquiry railway = new RailwayTransportEnquiry();
+        AirportTransportEnquiry airport = new AirportTransportEnquiry();
+
+        // example search for buses
+        bus.search("New York", "Washington D.C.", "2023-03-20");
+
+        // example search for trains
+        railway.search("Los Angeles", "San Francisco", "2023-04-01");
+
+        // example search for flights
+        airport.search("London", "Paris", "2023-05-15");
+
+        // close database connections
+        bus.closeConnection();
+        railway.closeConnection();
+        airport.closeConnection();
+    }
+}
+
+class BusTransportEnquiry {
+    private Connection conn;
+    private final String url = "jdbc:mysql://localhost:3306/transport";
+    private final String user = "root";
+    private final String password = "password";
+
+    public BusTransportEnquiry() {
+        try {
+            conn = DriverManager.getConnection(url, user, password);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void search(String from, String to, String date) {
+        try {
+            String query = "SELECT * FROM bus_routes WHERE from = ? AND to = ? AND date = ?";
+            PreparedStatement stmt = conn.prepareStatement(query);
+            stmt.setString(1, from);
+            stmt.setString(2, to);
+            stmt.setString(3, date);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                int routeId = rs.getInt("route_id");
+                String fromCity = rs.getString("from");
+                String toCity = rs.getString("to");
+                String busCompany = rs.getString("bus_company");
+                String departureTime = rs.getString("departure_time");
+                String arrivalTime = rs.getString("arrival_time");
+                int availableSeats = rs.getInt("available_seats");
+                double fare = rs.getDouble("fare");
+
+                System.out.println("Route ID: " + routeId);
+                System.out.println("from: " + fromCity);
+                System.out.println("to: " + toCity);
+                System.out.println("Bus Company: " + busCompany);
+                System.out.println("Departure Time: " + departureTime);
+                System.out.println("Arrival Time: " + arrivalTime);
+                System.out.println("Available Seats: " + availableSeats);
+                System.out.println("Fare: " + fare);
+                System.out.println();
+            }
+
+            rs.close();
+            stmt.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void closeConnection() {
+        try {
+            conn.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+}
+
+class RailwayTransportEnquiry {
+    private Connection conn;
+    private final String url = "jdbc:mysql://localhost:3306/transport";
+    private final String user = "root";
+    private final String password = "password";
+
+    public RailwayTransportEnquiry() {
+        try {
+            conn = DriverManager.getConnection(url, user, password);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void search(String from, String to, String date) {
+        try {
+            String query = "SELECT * FROM train_timetable WHERE from = ? AND to = ? AND date = ?";
+            PreparedStatement stmt = conn.prepareStatement(query);
+            stmt.setString(1, from);
+            stmt.setString(2, to);
+            stmt.setString(3, date);
+            ResultSet rs  = stmt.executeQuery();
+
+        while (rs.next()) {
+            int timetableId = rs.getInt("timetable_id");
+            String trainNumber = rs.getString("train_number");
+            String fromStation = rs.getString("from");
+            String toStation = rs.getString("to");
+            String departureTime = rs.getString("departure_time");
+            String arrivalTime = rs.getString("arrival_time");
+            double fare = rs.getDouble("fare");
+
+            System.out.println("Timetable ID: " + timetableId);
+            System.out.println("Train Number: " + trainNumber);
+            System.out.println("from Station: " + fromStation);
+            System.out.println("to Station: " + toStation);
+            System.out.println("Departure Time: " + departureTime);
+            System.out.println("Arrival Time: " + arrivalTime);
+            System.out.println("Fare: " + fare);
+            System.out.println();
+        }
+
+        rs.close();
+        stmt.close();
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+}
+
+public void closeConnection() {
+    try {
+        conn.close();
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    }
+}
+}
+
+class AirportTransportEnquiry {
+private Connection conn;
+private final String url = "jdbc:mysql://localhost:3306/transport";
+private final String user = "root";
+private final String password = "password";
+public AirportTransportEnquiry() {
+    try {
+        conn = DriverManager.getConnection(url, user, password);
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+}
+
+public void search(String from, String to, String date) {
+    try {
+        String query = "SELECT * FROM flight_schedule WHERE from = ? AND to = ? AND date = ?";
+        PreparedStatement stmt = conn.prepareStatement(query);
+        stmt.setString(1, from);
+        stmt.setString(2, to);
+        stmt.setString(3, date);
+        ResultSet rs = stmt.executeQuery();
+
+        while (rs.next()) {
+            int flightId = rs.getInt("flight_id");
+            String airline = rs.getString("airline");
+            String flightNumber = rs.getString("flight_number");
+            String fromAirport = rs.getString("from");
+            String toAirport = rs.getString("to");
+            String departureTime = rs.getString("departure_time");
+            String arrivalTime = rs.getString("arrival_time");
+            double fare = rs.getDouble("fare");
+
+            System.out.println("Flight ID: " + flightId);
+            System.out.println("Airline: " + airline);
+            System.out.println("Flight Number: " + flightNumber);
+            System.out.println("from Airport: " + fromAirport);
+            System.out.println("to Airport: " + toAirport);
+            System.out.println("Departure Time: " + departureTime);
+            System.out.println("Arrival Time: " + arrivalTime);
+            System.out.println("Fare: " + fare);
+            System.out.println();
+        }
+
+        rs.close();
+        stmt.close();
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+}
+
+public void closeConnection() {
+    try {
+        conn.close();
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+}
+}
+

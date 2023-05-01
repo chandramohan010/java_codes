@@ -1,0 +1,10 @@
+public class TransportSystem {
+    public static void main(String[] args) {
+        BusEnquiry bus = new BusEnquiry();
+        RailwayEnquiry railway = new RailwayEnquiry();
+        AirpoortEnquiry airport = new AirpoortEnquiry();
+        bus.search("Punjab", "Delhi", "2022-09-03");
+        railway.search("Delhi", "Mumbai", "2022-09-01");
+        airport.search("Mumbai", "England", "2022-09-15");
+    }
+}
